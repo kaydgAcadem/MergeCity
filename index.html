@@ -22,20 +22,14 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-   /* background-image: url('images/synth.gif');*/
+    background-image: url('images/background3.jpg');
    /* background-size: cover; /* Убедимся, что фон занимает всю область */
    /* background-position: center; /* Центрируем фон */
     flex-direction: column; /* Добавлено для вертикального выравнивания элементов */
 }
 
 #ton-connect 	{
-	font-family: 'Spacetron', Arial, sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 40px;
-	color: #fff;
-	top: 70%;
-    left: 70%;
+	margin-top: 40px;
 }
 
 #score 	{
@@ -130,7 +124,7 @@ body {
 	
     
 	<div id="ton-connect"></div>
-	
+
 	
 	<script>
     const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
@@ -349,27 +343,27 @@ body {
         function getTileColor(value) {
             switch (value) {
                 case 2:
-                    return '#eee4da';
+                    return '#A3AAFF';
                 case 4:
-                    return '#ede0c8';
+                    return '#B696F4';
                 case 8:
-                    return '#f2b179';
+                    return '#CA81E8';
                 case 16:
-                    return '#f59563';
+                    return '#DD6DDD';
                 case 32:
-                    return '#f67c5f';
+                    return '#E67D9A';
                 case 64:
-                    return '#f65e3b';
+                    return '#EA8579';
                 case 128:
-                    return '#edcf72';
+                    return '#D26A7D';
                 case 256:
-                    return '#edcc61';
+                    return '#BA4E80';
                 case 512:
-                    return '#edc850';
+                    return '#A23384';
                 case 1024:
-                    return '#edc53f';
+                    return '#862E9C';
                 case 2048:
-                    return '#edc22e';
+                    return '#6B2AB5';
                 default:
                     return '#3b3b3b';
             }
