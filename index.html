@@ -5,91 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marge Master</title>
 	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
+	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
         @font-face {
-            font-family: 'Spacetron';
-            src: url('fonts/spacetron-3.ttf') format('truetype');
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Запрет прокрутки */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 80vh;
-            flex-direction: column; /* Добавлено для вертикального выравнивания элементов */
-        }
+    font-family: 'Spacetron';
+    src: url('fonts/spacetron-3.ttf') format('truetype');
+}
 
-        #score {
-            font-family: 'Spacetron', Arial, sans-serif;
-            font-size: 36px;
-			font-weight: bold;
-            margin-bottom: 20px;
-            color: #495057;
-        }
+body {
+    font-family: 'Spacetron', Arial, sans-serif;
+    background: linear-gradient(black, 70%, grey); /* Цвет фона в стиле synthwave */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Запрет прокрутки */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+   /* background-image: url('images/synth.gif');*/
+   /* background-size: cover; /* Убедимся, что фон занимает всю область */
+   /* background-position: center; /* Центрируем фон */
+    flex-direction: column; /* Добавлено для вертикального выравнивания элементов */
+}
 
-        #game-container {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(4, 80px);
-            grid-template-rows: repeat(4, 80px);
-            gap: 10px;
-            position: relative; /* Добавлено для позиционирования элемента затемнения */
-        }
+#ton-connect 	{
+	font-family: 'Spacetron', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 40px;
+	color: #fff;
+	top: 70%;
+    left: 70%;
+}
 
-        .cell {
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #495057;
-        }
+#score 	{
+	font-family: 'Spacetron', Arial, sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+	animation: flicker 2s infinite alternate;
+	color: #fff;
+}
+/* Flickering animation */
+	@keyframes flicker {
+	0%, 18%, 22%, 25%, 53%, 57%, 100% {
 
-        #game-overlay {
-            position: absolute;
-            top: 28%;
-            left: 38,5%;
-            width: 23%;
-            height: 51%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            border-radius: 8px; /* Добавлено для затемнения только игрового поля */
-        }
+      text-shadow:
+      0 0 4px #fff,
+      0 0 11px #fff,
+      0 0 19px #fff,
+      0 0 40px #0fa,
+      0 0 80px #0fa,
+      0 0 90px #0fa,
+      0 0 100px #00ffd0,
+      0 0 150px #00ffd0;
+  
+	}
+  	20%, 24%, 55% {        
+		text-shadow: none;
+	}    
+}
 
-        #game-overlay.active {
-            display: flex; /* Показываем затемнение */
-        }
+#game-container {
+    background-color: rgba(248, 249, 250, 0.5); /* Полупрозрачный фон */
+    border-radius: 8px;
+    box-shadow: 0 0 25px rgba(0, 255, 170, 0.5); /* Тень для контейнера */
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-template-rows: repeat(4, 80px);
+    gap: 10px;
+    position: relative; /* Добавлено для позиционирования кнопки */
+}
 
-        #new-game-button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 34px;
-            cursor: pointer;
-        }
+.cell {
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: #fdfdfd;
+  text-shadow: 0 0 2px #001716, 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
+    background-color: #000; /* Цвет фона для клеток */
+    box-shadow: 0 0 5px #0fa; /* Тень для клеток */
+}
+
+#game-overlay {
+    display: none;
+}
+
+#game-overlay.active {
+    display: flex; /* Показываем затемнение */
+}
+
+#new-game-button {
+    background-color: rgba(173, 173, 173, 0.8); /* Цвет кнопки */
+    color: #fff; /* Цвет текста кнопки */
+    border: none;
+    border-radius: 8px;
+    width: 392px;
+    height: 392px;
+    font-size: 70px;
+	font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 49%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 25px #0fa; /* Тень для кнопки */
+    text-shadow: 0 0 25px #0fa; /* Тень для текста кнопки */
+}
+
 
     </style>
 </head>
 <body>
+	
     <div id="score">Score: 0</div>
     <div id="game-container"></div>
     <div id="game-overlay">
         <button id="new-game-button">&#8634;</button>
     </div>
-    
+	
+    <button id="new-game-button">&#8634;</button>
+	<div id="game-bottom">
+	<div id="ton-connect"></div>
+	</div>
+	
+	<script>
+    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+        manifestUrl: 'https://kaydgacadem.github.io/MergeMaster//tonconnect-manifest.json',
+        buttonRootId: 'ton-connect'
+    });
+	
+    async function connectToWallet() {
+        const connectedWallet = await tonConnectUI.connectWallet();
+        // Do something with connectedWallet if needed
+        console.log(connectedWallet);
+    }
+
+    // Call the function
+    connectToWallet().catch(error => {
+        console.error("Error connecting to wallet:", error);
+    });
+	</script>
+	
+	
+	
     <script>
 		let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
 		tg.expand();
@@ -309,7 +372,7 @@
                 case 2048:
                     return '#edc22e';
                 default:
-                    return '#dee0e3';
+                    return '#3b3b3b';
             }
         }
 
