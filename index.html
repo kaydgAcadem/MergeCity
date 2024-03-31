@@ -23,8 +23,8 @@ body {
     align-items: center;
     height: 100vh;
     background-image: url('images/background3.jpg');
-   /* background-size: cover; /* Убедимся, что фон занимает всю область */
-   /* background-position: center; /* Центрируем фон */
+    background-size: cover; /* Убедимся, что фон занимает всю область */
+    background-position: center; /* Центрируем фон */
     flex-direction: column; /* Добавлено для вертикального выравнивания элементов */
 }
 
@@ -66,8 +66,8 @@ body {
     box-shadow: 0 0 25px rgba(0, 255, 170, 0.5); /* Тень для контейнера */
     padding: 20px;
     display: grid;
-    grid-template-columns: repeat(4, 80px);
-    grid-template-rows: repeat(4, 80px);
+    grid-template-columns: repeat(4, 70px);
+    grid-template-rows: repeat(4, 70px);
     gap: 10px;
     position: relative; /* Добавлено для позиционирования кнопки */
 }
@@ -80,9 +80,9 @@ body {
     font-size: 26px;
     font-weight: bold;
     color: #fdfdfd;
-  text-shadow: 0 0 2px #001716, 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
+    text-shadow: 0 0 10px #fff;/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
     background-color: #000; /* Цвет фона для клеток */
-    box-shadow: 0 0 5px #0fa; /* Тень для клеток */
+    box-shadow: 0 0 30px #fff; /* Тень для клеток */
 }
 
 #game-overlay {
@@ -98,8 +98,8 @@ body {
     color: #fff; /* Цвет текста кнопки */
     border: none;
     border-radius: 8px;
-    width: 392px;
-    height: 392px;
+    width: 375px;
+    height: 375px;
     font-size: 70px;
 	font-weight: bold;
     cursor: pointer;
@@ -124,8 +124,12 @@ body {
 	
     
 	<div id="ton-connect"></div>
-
-	
+	<script>
+		window.addEventListener('beforeunload', (event) => {
+		event.preventDefault();
+		event.returnValue = '';
+		});
+	</script>
 	<script>
     const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
         manifestUrl: 'https://kaydgacadem.github.io/MergeMaster//tonconnect-manifest.json',
@@ -365,7 +369,7 @@ body {
                 case 2048:
                     return '#6B2AB5';
                 default:
-                    return '#3b3b3b';
+                    return '#0E0361';
             }
         }
 
