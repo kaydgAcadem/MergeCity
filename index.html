@@ -90,6 +90,8 @@
     </div>
     
     <script>
+		let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
+		tg.expand();
         // Определение размера игрового поля
         const BOARD_SIZE = 4;
         let score = 0; // Переменная для хранения счета
