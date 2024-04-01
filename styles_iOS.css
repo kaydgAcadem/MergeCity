@@ -22,7 +22,7 @@ body {
 /* Score */
 #score 	{
 	font-family: 'Spacetron', Arial, sans-serif;
-    font-size: 36px;
+    font-size: 32px;
     font-weight: bold;
     margin-bottom: 20px;
 	animation: flicker 2s infinite alternate;
@@ -67,7 +67,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: bold;
     color: #fdfdfd;
     text-shadow: 0 0 5px #fff;/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
