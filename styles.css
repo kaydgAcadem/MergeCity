@@ -70,9 +70,8 @@ body {
     font-size: 22px;
     font-weight: bold;
     color: #fdfdfd;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 1);/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
-    /* background-color: #000; /* Цвет фона для клеток */
-    box-shadow: 0 0 30px rgba(255, 255, 255, 1);; /* Тень для клеток */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 1); /* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
+    box-shadow: 0 0 30px rgba(255, 255, 255, 1); /* Тень для клеток */
 }
 
 #game-overlay {
