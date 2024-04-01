@@ -37,8 +37,10 @@
             }
         }
 
-        // Call function to apply styles based on user device type
-        applyStylesForDevice(getUserDeviceType());
+        // Call function to apply styles based on user device type after the document is fully loaded
+        window.addEventListener('load', function() {
+            applyStylesForDevice(getUserDeviceType());
+        });
     </script>
 
   	<script>
