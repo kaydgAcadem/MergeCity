@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Merge Master</title>
-	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
-	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+	<link id="styles-link" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="styles_iOS.css">
 	<link rel="stylesheet" type="text/css" href="styles_PC_Android.css">
+	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
+	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 
 </head>
 <body>
@@ -39,6 +40,8 @@
 
         // Call function to apply styles based on user device type after the document is fully loaded
         window.addEventListener('load', function() {
+			const deviceType = getUserDeviceType();
+            console.log('User device type:', deviceType);
             applyStylesForDevice(getUserDeviceType());
         });
     </script>
