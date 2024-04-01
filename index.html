@@ -11,14 +11,22 @@
 	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 	
 	<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let usercard = document.getElementById("usercard"); //получаем блок usercard
-            let profName = document.createElement('p'); //создаем параграф
-			profName.innerText = `${tg.initDataUnsafe.user.username} (${tg.initDataUnsafe.user.language_code})`;
+		document.addEventListener("DOMContentLoaded", function() {
+			let usercard = document.getElementById("usercard"); //получаем блок usercard
+			let profName = document.createElement('p'); //создаем параграф
+
+			// Проверяем, что данные пользователя загружены
+			if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            profName.innerText = `${tg.initDataUnsafe.user.username} (${tg.initDataUnsafe.user.language_code})`;
+			} else {
+				profName.innerText = 'No Name';
+			}
+        
 			//выдем username и код языка
-			usercard.appendChild('@'profName); //добавляем 
-        });
-    </script>
+			usercard.appendChild(profName); //добавляем 
+		});
+	</script>
+
 	
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
@@ -59,15 +67,15 @@
 </head>
 <body>
 	
+	<div class="container">
+	<div id="usercard"></div>    
+	<div id="ton-connect"></div>
+	</div>
     <div id="score">Score: 0</div>
     <div id="game-container"></div>
     <div id="game-overlay">
         <button id="new-game-button">&#8634;</button>
     </div>
-	<div class="container">
-	<div id="usercard"></div>    
-	<div id="ton-connect"></div>
-	</div>
 	<script>
 		window.addEventListener('beforeunload', (event) => {
 		event.preventDefault();

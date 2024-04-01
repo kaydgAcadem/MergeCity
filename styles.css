@@ -50,7 +50,7 @@ body {
 
 /* Game Space */
 #game-container {
-    background-color: rgba(248, 249, 250, 0.5); /* Полупрозрачный фон */
+    background-color: rgba(248, 249, 250, 0.4); /* Полупрозрачный фон */
     border-radius: 8px;
     box-shadow: 0 0 25px rgba(0, 255, 170, 0.5); /* Тень для контейнера */
     padding: 20px;
@@ -104,8 +104,8 @@ body {
 #usercard	{
 	font-family: 'Spacetron', Arial, sans-serif;
     font-size: 20px;
-	margin-top: 5px;
-    margin-left: 0px;
+	margin-top: -10px;
+    margin-left: 10px;
 	color: #fff;
 	font-weight: bold;
 	text-shadow:
@@ -127,7 +127,8 @@ body {
 }
 
 .container {
-	margin-top: 20px;
+	margin-top: -90px;
+	margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
 }
