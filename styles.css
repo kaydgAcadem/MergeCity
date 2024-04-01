@@ -102,8 +102,11 @@ body {
 }
 
 #usercard	{
+	font-family: 'Spacetron', Arial, sans-serif;
+    font-size: 20px;
     margin-top: 25px;
 	margin-left: 20px;
+	color: #fff;
 }
 
 /* Connect Wallet */
