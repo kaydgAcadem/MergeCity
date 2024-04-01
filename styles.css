@@ -101,7 +101,13 @@ body {
     text-shadow: 0 0 25px #0fa; /* Тень для текста кнопки */
 }
 
+#usercard	{
+    margin-top: 25px;
+	margin-left: 20px;
+}
+
 /* Connect Wallet */
 #ton-connect 	{
-	margin-top: 40px;
+	margin-top: 25px;
+	margin-left: 150px;
 }

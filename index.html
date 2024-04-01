@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (deviceType === "iOS") {
             var cells = document.querySelectorAll(".cell");
             cells.forEach(function(cell) {
-                cell.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.6)";
-                cell.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.5)";
+                cell.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)";
+                cell.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.4)";
             });
         }
     }
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <div id="game-overlay">
         <button id="new-game-button">&#8634;</button>
     </div>
-	    
+	<div id="usercard"></div>    
 	<div id="ton-connect"></div>
 	
 	<script>
@@ -83,11 +83,25 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 	</script>
 	
-	
+	<script>
+	let usercard = document.getElementById("usercard"); //получаем блок usercard
+	let profName = document.createElement('p'); //создаем параграф
+   profName.innerText = `${tg.initDataUnsafe.user.username} (${tg.initDataUnsafe.user.language_code})`;
+   //выдем username и код языка
+   usercard.appendChild(profName); //добавляем 
+
+   let userid = document.createElement('p'); //создаем еще параграф 
+   userid.innerText = `${tg.initDataUnsafe.user.id}`; //показываем user_id
+   usercard.appendChild(userid); //добавляем
+	</script>
 	
     <script>
 		let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
 		tg.expand();
+		
+		 
+
+   
 
         // Определение размера игрового поля
         const BOARD_SIZE = 4;
