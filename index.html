@@ -16,11 +16,7 @@
             let profName = document.createElement('p'); //создаем параграф
 			profName.innerText = `${tg.initDataUnsafe.user.username} (${tg.initDataUnsafe.user.language_code})`;
 			//выдем username и код языка
-			usercard.appendChild(profName); //добавляем 
-
-            let userid = document.createElement('p'); //создаем еще параграф 
-			userid.innerText = `${tg.initDataUnsafe.user.id}`; //показываем user_id
-			usercard.appendChild(userid); //добавляем
+			usercard.appendChild('@'profName); //добавляем 
         });
     </script>
 	
@@ -68,9 +64,10 @@
     <div id="game-overlay">
         <button id="new-game-button">&#8634;</button>
     </div>
+	<div class="container">
 	<div id="usercard"></div>    
 	<div id="ton-connect"></div>
-	
+	</div>
 	<script>
 		window.addEventListener('beforeunload', (event) => {
 		event.preventDefault();
@@ -99,10 +96,6 @@
 		let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
 		tg.expand();
 		
-		 
-
-   
-
         // Определение размера игрового поля
         const BOARD_SIZE = 4;
         let score = 0; // Переменная для хранения счета

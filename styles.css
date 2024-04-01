@@ -104,13 +104,30 @@ body {
 #usercard	{
 	font-family: 'Spacetron', Arial, sans-serif;
     font-size: 20px;
-    margin-top: 25px;
-	margin-left: 20px;
+	margin-top: 5px;
+    margin-left: 0px;
 	color: #fff;
+	font-weight: bold;
+	text-shadow:
+      0 0 4px #fff,
+      0 0 11px #fff,
+      0 0 19px #fff,
+      0 0 40px #0fa,
+      0 0 80px #0fa,
+      0 0 90px #0fa,
+      0 0 100px #00ffd0,
+      0 0 150px #00ffd0;
+	  
+      
 }
 
 /* Connect Wallet */
 #ton-connect 	{
-	margin-top: 25px;
-	margin-left: 150px;
+	margin-left: 50px;
+}
+
+.container {
+	margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
 }
