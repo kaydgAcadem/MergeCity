@@ -92,23 +92,31 @@
 		event.returnValue = '';
 		});
 	</script>
-	<script>
-		const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-			manifestUrl: 'https://kaydgacadem.github.io/MergeMaster//tonconnect-manifest.json',
-			buttonRootId: 'ton-connect'
-		});
-	
-    async function connectToWallet() {
-        const connectedWallet = await tonConnectUI.connectWallet();
-        // Do something with connectedWallet if needed
-        console.log(connectedWallet);
-    }
 
-    // Call the function
-    connectToWallet().catch(error => {
-        console.error("Error connecting to wallet:", error);
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+            manifestUrl: 'https://kaydgacadem.github.io/MergeMaster//tonconnect-manifest.json',
+            buttonRootId: 'ton-connect'
+        });
+
+        // Функция для подключения к кошельку
+        async function connectToWallet() {
+            const connectedWallet = await tonConnectUI.connectWallet();
+            // Do something with connectedWallet if needed
+            console.log(connectedWallet);
+        }
+
+        // Обработчик события нажатия на кнопку подключения кошелька
+        const connectButton = document.getElementById('ton-connect');
+        connectButton.addEventListener('click', function () {
+            connectToWallet().catch(error => {
+                console.error("Error connecting to wallet:", error);
+            });
+        });
     });
-	</script>
+</script>
+
 	
     <script>
 		let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
