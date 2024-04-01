@@ -70,9 +70,9 @@ body {
     font-size: 22px;
     font-weight: bold;
     color: #fdfdfd;
-    text-shadow: 0 0 0px #fff;/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
+    text-shadow: 0 0 5px #fff;/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
     /* background-color: #000; /* Цвет фона для клеток */
-    box-shadow: 0 0 0px #fff; /* Тень для клеток */
+    box-shadow: 0 0 20px #fff; /* Тень для клеток */
 }
 
 #game-overlay {
@@ -105,53 +105,4 @@ body {
 /* Connect Wallet */
 #ton-connect 	{
 	margin-top: 40px;
-}
-
-/* Tiles Class */
-.tile-2 {
-    background-color: #A3AAFF;
-}
-
-.tile-4 {
-    background-color: #B696F4;
-}
-
-.tile-8 {
-    background-color: #CA81E8;
-}
-
-.tile-16 {
-    background-color: #DD6DDD;
-}
-
-.tile-32 {
-    background-color: #E67D9A;
-}
-
-.tile-64 {
-    background-color: #EA8579;
-}
-
-.tile-128 {
-    background-color: #D26A7D;
-}
-
-.tile-256 {
-    background-color: #BA4E80;
-}
-
-.tile-512 {
-    background-color: #A23384;
-}
-
-.tile-1024 {
-    background-color: #862E9C;
-}
-
-.tile-2048 {
-    background-color: #6B2AB5;
-}
-
-.tile-default {
-    background-color: #0E0361;
 }
