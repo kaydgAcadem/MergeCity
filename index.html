@@ -21,13 +21,27 @@ document.addEventListener("DOMContentLoaded", function() {
         deviceType = "other";
     }
     
-    // Если устройство на iOS, изменяем значение свойства text-shadow внутри класса .cell
-    if (deviceType === "iOS") {
-        var cells = document.querySelectorAll(".cell");
-        cells.forEach(function(cell) {
-            cell.style.textShadow = "0 0 0px #fff";
-        });
+    // Функция для применения стиля text-shadow к плиткам
+    function applyTextShadow() {
+        if (deviceType === "iOS") {
+            var cells = document.querySelectorAll(".cell");
+            cells.forEach(function(cell) {
+                cell.style.textShadow = "0 0 0px #fff";
+            });
+        }
     }
+    
+    // Вызываем функцию для применения стиля text-shadow при загрузке страницы
+    applyTextShadow();
+    
+    // Обработчик события при добавлении новой плитки на игровое поле
+    document.addEventListener('DOMNodeInserted', function(event) {
+        // Проверяем, что добавленный элемент - плитка
+        if (event.target.classList && event.target.classList.contains('cell')) {
+            // Вызываем функцию для применения стиля text-shadow к добавленной плитке
+            applyTextShadow();
+        }
+    });
 });
 
 	</script>
