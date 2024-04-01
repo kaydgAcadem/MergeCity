@@ -70,7 +70,7 @@ body {
     font-size: 22px;
     font-weight: bold;
     color: #fdfdfd;
-    text-shadow: 0 0 10px #fff;/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
     /* background-color: #000; /* Цвет фона для клеток */
     box-shadow: 0 0 30px #fff; /* Тень для клеток */
 }
