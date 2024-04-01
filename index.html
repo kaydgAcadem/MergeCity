@@ -21,29 +21,17 @@
 	    
 	<div id="ton-connect"></div>
 	
-    <script>
+	<script>
         // Function to determine user device type
         function getUserDeviceType() {
             // Assuming iOS devices use 'iPhone', 'iPad', or 'iPod' in user agent string
             return /(iPhone|iPod|iPad)/i.test(navigator.userAgent) ? 'iOS' : 'PC_Android';
         }
 
-        // Function to apply device-specific class to <html> tag
-        function applyDeviceClass() {
-            const deviceType = getUserDeviceType();
-            document.documentElement.classList.add(deviceType);
-        }
-
-        // Call function to apply device-specific class after the document is fully loaded
-        window.addEventListener('load', function() {
-            applyDeviceClass();
-        });
-
         // Function to apply styles based on user device type
-        function applyStylesForDevice() {
-            const htmlTag = document.documentElement;
+        function applyStylesForDevice(deviceType) {
             const stylesLink = document.getElementById('styles-link');
-            if (htmlTag.classList.contains('iOS')) {
+            if (deviceType === 'iOS') {
                 stylesLink.href = 'styles_iOS.css';
             } else {
                 stylesLink.href = 'styles_PC_Android.css';
@@ -54,7 +42,7 @@
         window.addEventListener('load', function() {
 			const deviceType = getUserDeviceType();
             console.log('User device type:', deviceType);
-            applyStylesForDevice();
+            applyStylesForDevice(getUserDeviceType());
         });
     </script>
 
@@ -280,6 +268,7 @@
 
         // Функция для определения цвета плитки в зависимости от значения
         // Обновленная функция getTileColor
+// Функция для определения цвета плитки в зависимости от значения
 function getTileColor(value) {
     switch (value) {
         case 2:
@@ -308,6 +297,7 @@ function getTileColor(value) {
             return 'tile-default';
     }
 }
+
 
 
         // Обработка нажатия клавиш на клавиатуре

@@ -109,11 +109,11 @@ body {
 
 /* Tiles Class */
 .tile-2 {
-    color: #A3AAFF;
+    background-color: #A3AAFF;
 }
 
 .tile-4 {
-    color: #B696F4;
+    background-color: #B696F4;
 }
 
 .tile-8 {
