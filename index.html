@@ -17,7 +17,7 @@
 
 			// Проверяем, что данные пользователя загружены
 			if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            profName.innerText = `${tg.initDataUnsafe.user.username} (${tg.initDataUnsafe.user.language_code})`;
+            profName.innerText = `${tg.initDataUnsafe.user.first_name} (${tg.initDataUnsafe.user.language_code})`;
 			} else {
 				profName.innerText = 'No Name';
 			}
@@ -44,12 +44,17 @@
 				if (deviceType === "iOS") {
 					var cells = document.querySelectorAll(".cell");
 					var score = document.querySelectorAll("#score");
+					var usercard = document.querySelectorAll("#usercard");
 					cells.forEach(function(cell) {
 						cell.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)";
 						cell.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.4)";
 					});
 					score.forEach(function(score) {
 						score.style.textShadow = "0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 40px rgba(15, 15, 170, 0.5), 0 0 50px rgba(15, 15, 170, 0.5), 0 0 60px rgba(0, 255, 208, 0.5), 0 0 100px rgba(0, 255, 208, 0.5);";
+						
+					});
+					usercard.forEach(function(usercard) {
+						usercard.style.textShadow = "0 0 4px #fff, 0 0 10px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 25px rgba(15, 15, 170, 0.5), 0 0 35px rgba(15, 15, 170, 0.5);";
 						
 					});
 				}
