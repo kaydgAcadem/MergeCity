@@ -29,47 +29,49 @@
 
 	
 	<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var userAgent = navigator.platform;
-    var deviceType = userAgent.match(/iPhone|iPad|iPod/i) ? "iOS" : "other";
-
-    function applyTextShadow() {
-        if (deviceType === "iOS") {
-            var cells = document.querySelectorAll(".cell");
-            var score = document.getElementById("score");
-            var usercard = document.getElementById("usercard");
-
-            if (score && score.style && usercard && usercard.style) {
-                cells.forEach(function(cell) {
-                    cell.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)";
-                    cell.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.4)";
-                });
-
-                score.style.textShadow = "0 0 4px #fff, 0 0 10px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 25px rgba(15, 15, 170, 0.5), 0 0 31px rgba(15, 15, 170, 0.5), 0 0 40px rgba(0, 255, 208, 0.5), 0 0 52px rgba(0, 255, 208, 0.5)";
-                
-                usercard.style.textShadow = "0 0 4px #fff, 0 0 10px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 25px rgba(15, 15, 170, 0.5), 0 0 35px rgba(15, 15, 170, 0.5)";
-            }
-        }
-    }
-
-    applyTextShadow();
-
-    window.addEventListener('load', function() {
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.target.classList && mutation.target.classList.contains('cell')) {
-                    applyTextShadow();
-                }
-            });
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    });
-});
-
+		document.addEventListener("DOMContentLoaded", function() {
+			// Получаем тип устройства пользователя
+			var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			var deviceType;
+    
+			if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+				deviceType = "iOS";
+			} else {
+				deviceType = "other";
+			}
+			// Функция для применения стиля text-shadow
+			function applyTextShadow() {
+				if (deviceType === "iOS") {
+					var cells = document.querySelectorAll(".cell");
+					var score = document.querySelectorAll("#score");
+					var usercard = document.querySelectorAll("#usercard");
+					cells.forEach(function(cell) {
+						cell.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)";
+						cell.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.4)";
+					});
+					score.forEach(function(score) {
+						score.style.textShadow = "0 0 4px #fff, 0 0 10px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 25px rgba(15, 15, 170, 0.5), 0 0 35px rgba(15, 15, 170, 0.5), 0 0 50px rgba(0, 255, 208, 0.5), 0 0 70px rgba(0, 255, 208, 0.5)";
+						
+					});
+					usercard.forEach(function(usercard) {
+						usercard.style.textShadow = "0 0 4px #fff, 0 0 10px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 25px rgba(15, 15, 170, 0.5), 0 0 35px rgba(15, 15, 170, 0.5)";
+						
+					});
+				}
+			}
+    
+		// Вызываем функцию для применения стиля text-shadow при загрузке страницы
+		applyTextShadow();
+    
+		// Обработчик события при добавлении новой плитки на игровое поле
+		document.addEventListener('DOMNodeInserted', function(event) {
+			// Проверяем, что добавленный элемент - плитка
+			if (event.target.classList && event.target.classList.contains('cell')) {
+				// Вызываем функцию для применения стиля text-shadow к добавленной плитке
+				applyTextShadow();
+			}
+		});
+	});
 	</script>
 
 </head>
