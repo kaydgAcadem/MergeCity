@@ -4,11 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Merge Master</title>
-	<link id="styles-link" rel="stylesheet" type="text/css">
+	<!--<link id="styles-link" rel="stylesheet" type="text/css">-->
 	<!--<link rel="stylesheet" type="text/css" href="styles_iOS.css">-->
-	<!--<link rel="stylesheet" type="text/css" href="styles_PC_Android.css">-->
+	<link rel="stylesheet" type="text/css" href="styles_PC_Android.css">
 	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
 	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+	<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		// Получаем тип устройства пользователя
+		var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+		var deviceType;
+    
+		if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+			deviceType = "iOS";
+		} else {
+			deviceType = "other";
+		}
+    
+		// Если устройство на iOS, изменяем значение свойства text-shadow внутри класса .cell
+		if (deviceType === "iOS") {
+			var cell = document.querySelector(".cell");
+			if (cell) {
+				cell.style.textShadow = "0 0 0px #fff";
+			}
+		}
+	});
+	</script>
 
 </head>
 <body>
@@ -22,31 +43,6 @@
 	<div id="ton-connect"></div>
 	
 	<script>
-        // Function to determine user device type
-        function getUserDeviceType() {
-            // Assuming iOS devices use 'iPhone', 'iPad', or 'iPod' in user agent string
-            return /(iPhone|iPod|iPad)/i.test(navigator.userAgent) ? 'iOS' : 'PC_Android';
-        }
-
-        // Function to apply styles based on user device type
-        function applyStylesForDevice(deviceType) {
-            const stylesLink = document.getElementById('styles-link');
-            if (deviceType === 'iOS') {
-                stylesLink.href = 'styles_iOS.css';
-            } else {
-                stylesLink.href = 'styles_PC_Android.css';
-            }
-        }
-
-        // Call function to apply styles based on user device type after the document is fully loaded
-        window.addEventListener('load', function() {
-			const deviceType = getUserDeviceType();
-            console.log('User device type:', deviceType);
-            applyStylesForDevice(getUserDeviceType());
-        });
-    </script>
-
-  	<script>
 		window.addEventListener('beforeunload', (event) => {
 		event.preventDefault();
 		event.returnValue = '';
