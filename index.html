@@ -3,115 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marge Master</title>
+    <title>Merge Master</title>
 	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
 	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-    <style>
-@font-face {
-    font-family: 'Spacetron';
-    src: url('fonts/spacetron-3.ttf') format('truetype');
-}
+	<link rel="stylesheet" type="text/css" href="styles_iOS.css">
+	<link rel="stylesheet" type="text/css" href="styles_PC_Android.css">
 
-body {
-    font-family: 'Spacetron', Arial, sans-serif;
-    background: linear-gradient(black, 70%, grey); /* Цвет фона в стиле synthwave */
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Запрет прокрутки */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-image: url('images/background1920x1080.jpg');
-    background-size: cover; /* Убедимся, что фон занимает всю область */
-    background-position: center; /* Центрируем фон */
-    flex-direction: column; /* Добавлено для вертикального выравнивания элементов */
-}
-
-#score 	{
-	font-family: 'Spacetron', Arial, sans-serif;
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 20px;
-	animation: flicker 2s infinite alternate;
-	color: #fff;
-}
-/* Flickering animation */
-	@keyframes flicker {
-	0%, 18%, 22%, 25%, 53%, 57%, 100% {
-
-      text-shadow:
-      0 0 4px #fff,
-      0 0 11px #fff,
-      0 0 19px #fff,
-      0 0 40px #0fa,
-      0 0 80px #0fa,
-      0 0 90px #0fa,
-      0 0 100px #00ffd0,
-      0 0 150px #00ffd0;
-  
-	}
-  	20%, 24%, 55% {        
-		text-shadow: none;
-	}    
-}
-
-#game-container {
-    background-color: rgba(248, 249, 250, 0.5); /* Полупрозрачный фон */
-    border-radius: 8px;
-    box-shadow: 0 0 25px rgba(0, 255, 170, 0.5); /* Тень для контейнера */
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(4, 70px);
-    grid-template-rows: repeat(4, 70px);
-    gap: 10px;
-    position: relative; /* Добавлено для позиционирования кнопки */
-}
-
-.cell {
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 26px;
-    font-weight: bold;
-    color: #fdfdfd;
-    text-shadow: 0 0 10px #fff;/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
-    background-color: #000; /* Цвет фона для клеток */
-    box-shadow: 0 0 30px #fff; /* Тень для клеток */
-}
-
-#game-overlay {
-    display: none;
-}
-
-#game-overlay.active {
-    display: flex; /* Показываем затемнение */
-}
-
-#new-game-button {
-    background-color: rgba(173, 173, 173, 0.8); /* Цвет кнопки */
-    color: #fff; /* Цвет текста кнопки */
-    border: none;
-    border-radius: 8px;
-    width: 375px;
-    height: 375px;
-    font-size: 70px;
-	font-weight: bold;
-    cursor: pointer;
-    position: absolute;
-    top: 49%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 25px #0fa; /* Тень для кнопки */
-    text-shadow: 0 0 25px #0fa; /* Тень для текста кнопки */
-}
-
-#ton-connect 	{
-	margin-top: 40px;
-}
-
-</style>
 </head>
 <body>
 	
@@ -120,10 +17,31 @@ body {
     <div id="game-overlay">
         <button id="new-game-button">&#8634;</button>
     </div>
-	
-    
+	    
 	<div id="ton-connect"></div>
+	
 	<script>
+        // Function to determine user device type
+        function getUserDeviceType() {
+            // Assuming iOS devices use 'iPhone', 'iPad', or 'iPod' in user agent string
+            return /(iPhone|iPod|iPad)/i.test(navigator.userAgent) ? 'iOS' : 'PC_Android';
+        }
+
+        // Function to apply styles based on user device type
+        function applyStylesForDevice(deviceType) {
+            const stylesLink = document.getElementById('styles-link');
+            if (deviceType === 'iOS') {
+                stylesLink.href = 'styles_iOS.css';
+            } else {
+                stylesLink.href = 'styles_PC_Android.css';
+            }
+        }
+
+        // Call function to apply styles based on user device type
+        applyStylesForDevice(getUserDeviceType());
+    </script>
+
+  	<script>
 		window.addEventListener('beforeunload', (event) => {
 		event.preventDefault();
 		event.returnValue = '';
@@ -152,6 +70,7 @@ body {
     <script>
 		let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
 		tg.expand();
+
         // Определение размера игрового поля
         const BOARD_SIZE = 4;
         let score = 0; // Переменная для хранения счета
@@ -343,34 +262,36 @@ body {
         }
 
         // Функция для определения цвета плитки в зависимости от значения
-        function getTileColor(value) {
-            switch (value) {
-                case 2:
-                    return '#A3AAFF';
-                case 4:
-                    return '#B696F4';
-                case 8:
-                    return '#CA81E8';
-                case 16:
-                    return '#DD6DDD';
-                case 32:
-                    return '#E67D9A';
-                case 64:
-                    return '#EA8579';
-                case 128:
-                    return '#D26A7D';
-                case 256:
-                    return '#BA4E80';
-                case 512:
-                    return '#A23384';
-                case 1024:
-                    return '#862E9C';
-                case 2048:
-                    return '#6B2AB5';
-                default:
-                    return '#0E0361';
-            }
-        }
+        // Обновленная функция getTileColor
+function getTileColor(value) {
+    switch (value) {
+        case 2:
+            return 'tile-2';
+        case 4:
+            return 'tile-4';
+        case 8:
+            return 'tile-8';
+        case 16:
+            return 'tile-16';
+        case 32:
+            return 'tile-32';
+        case 64:
+            return 'tile-64';
+        case 128:
+            return 'tile-128';
+        case 256:
+            return 'tile-256';
+        case 512:
+            return 'tile-512';
+        case 1024:
+            return 'tile-1024';
+        case 2048:
+            return 'tile-2048';
+        default:
+            return 'tile-default';
+    }
+}
+
 
         // Обработка нажатия клавиш на клавиатуре
         document.addEventListener('keydown', function (event) {

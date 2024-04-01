@@ -1,0 +1,157 @@
+@font-face {
+    font-family: 'Spacetron';
+    src: url('fonts/spacetron-3.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Spacetron', Arial, sans-serif;
+    background: linear-gradient(black, 70%, grey); /* Цвет фона в стиле synthwave */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Запрет прокрутки */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('images/background1920x1080.jpg');
+    background-size: cover; /* Убедимся, что фон занимает всю область */
+    background-position: center; /* Центрируем фон */
+    flex-direction: column; /* Добавлено для вертикального выравнивания элементов */
+}
+
+/* Score */
+#score 	{
+	font-family: 'Spacetron', Arial, sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+	animation: flicker 2s infinite alternate;
+	color: #fff;
+}
+/* Flickering animation of Score */
+	@keyframes flicker {
+	0%, 18%, 22%, 25%, 53%, 57%, 100% {
+
+      text-shadow:
+      0 0 4px #fff,
+      0 0 11px #fff,
+      0 0 19px #fff,
+      0 0 40px #0fa,
+      0 0 80px #0fa,
+      0 0 90px #0fa,
+      0 0 100px #00ffd0,
+      0 0 150px #00ffd0;
+  
+	}
+  	20%, 24%, 55% {        
+		text-shadow: none;
+	}    
+}
+
+/* Game Space */
+#game-container {
+    background-color: rgba(248, 249, 250, 0.5); /* Полупрозрачный фон */
+    border-radius: 8px;
+    box-shadow: 0 0 25px rgba(0, 255, 170, 0.5); /* Тень для контейнера */
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 70px);
+    grid-template-rows: repeat(4, 70px);
+    gap: 10px;
+    position: relative; /* Добавлено для позиционирования кнопки */
+}
+
+/* New Tile */
+.cell {
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: #fdfdfd;
+    text-shadow: 0 0 10px #fff;/* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
+    /* background-color: #000; /* Цвет фона для клеток */
+    box-shadow: 0 0 30px #fff; /* Тень для клеток */
+}
+
+#game-overlay {
+    display: none;
+}
+
+#game-overlay.active {
+    display: flex; /* Показываем затемнение */
+}
+
+/* New Game btn */
+#new-game-button {
+    background-color: rgba(173, 173, 173, 0.8); /* Цвет кнопки */
+    color: #fff; /* Цвет текста кнопки */
+    border: none;
+    border-radius: 8px;
+    width: 375px;
+    height: 375px;
+    font-size: 70px;
+	font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 49%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 25px #0fa; /* Тень для кнопки */
+    text-shadow: 0 0 25px #0fa; /* Тень для текста кнопки */
+}
+
+/* Connect Wallet */
+#ton-connect 	{
+	margin-top: 40px;
+}
+
+/* Tiles Class */
+.tile-2 {
+    color: #A3AAFF;
+}
+
+.tile-4 {
+    color: #B696F4;
+}
+
+.tile-8 {
+    background-color: #CA81E8;
+}
+
+.tile-16 {
+    background-color: #DD6DDD;
+}
+
+.tile-32 {
+    background-color: #E67D9A;
+}
+
+.tile-64 {
+    background-color: #EA8579;
+}
+
+.tile-128 {
+    background-color: #D26A7D;
+}
+
+.tile-256 {
+    background-color: #BA4E80;
+}
+
+.tile-512 {
+    background-color: #A23384;
+}
+
+.tile-1024 {
+    background-color: #862E9C;
+}
+
+.tile-2048 {
+    background-color: #6B2AB5;
+}
+
+.tile-default {
+    background-color: #0E0361;
+}
