@@ -10,25 +10,26 @@
 	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
 	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 	<script>
-	document.addEventListener("DOMContentLoaded", function() {
-		// Получаем тип устройства пользователя
-		var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-		var deviceType;
+document.addEventListener("DOMContentLoaded", function() {
+    // Получаем тип устройства пользователя
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    var deviceType;
     
-		if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-			deviceType = "iOS";
-		} else {
-			deviceType = "other";
-		}
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        deviceType = "iOS";
+    } else {
+        deviceType = "other";
+    }
     
-		// Если устройство на iOS, изменяем значение свойства text-shadow внутри класса .cell
-		if (deviceType === "iOS") {
-			var cell = document.querySelector(".cell");
-			if (cell) {
-				cell.style.textShadow = "0 0 0px #fff";
-			}
-		}
-	});
+    // Если устройство на iOS, изменяем значение свойства text-shadow внутри класса .cell
+    if (deviceType === "iOS") {
+        var cells = document.querySelectorAll(".cell");
+        cells.forEach(function(cell) {
+            cell.style.textShadow = "0 0 0px #fff";
+        });
+    }
+});
+
 	</script>
 
 </head>
