@@ -39,19 +39,21 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
         deviceType = "other";
     }
-    // Функция для применения стиля text-shadow
+
+    // Функция для применения стиля text-shadow к элементам
     function applyTextShadow() {
         if (deviceType === "iOS") {
             var cells = document.querySelectorAll(".cell");
-            var score = document.getElementById("score");
-            var usercard = document.getElementById("usercard"); // Исправлено здесь
+            var usercard = document.getElementById("usercard");
+
             cells.forEach(function(cell) {
                 cell.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)";
                 cell.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.4)";
             });
-            score.style.textShadow = "0 0 4px #fff, 0 0 10px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 25px rgba(15, 15, 170, 0.5), 0 0 35px rgba(15, 15, 170, 0.5), 0 0 50px rgba(0, 255, 208, 0.5), 0 0 70px rgba(0, 255, 208, 0.5)";
-                        
-            //usercard.style.textShadow = "0 0 4px #fff, 0 0 10px #fff, 0 0 19px #fff, 0 0 20px rgba(15, 15, 170, 0.5), 0 0 25px rgba(15, 15, 170, 0.5), 0 0 35px rgba(15, 15, 170, 0.5)";
+
+            if (usercard) {
+                usercard.style.textShadow = "0 0 4px #fff, 0 0 11px #fff, 0 0 26px #0fa, 0 0 44px #0fa, 0 0 59px #00ffd0";
+            }
         }
     }
 
@@ -66,8 +68,31 @@ document.addEventListener("DOMContentLoaded", function() {
             applyTextShadow();
         }
     });
-});
 
+    // Функция для применения стиля text-shadow к @keyframes flicker
+    function applyKeyframesTextShadow() {
+        if (deviceType === "iOS") {
+            var keyframesStyle = document.styleSheets[0].cssRules[4]; // Здесь 4 - индекс правила @keyframes flicker
+            if (keyframesStyle) {
+                var keyframesText = keyframesStyle.cssText;
+                keyframesText = keyframesText.replace(/(text-shadow:)[^;]+(;)/, "$1 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 27px #0fa, 0 0 35px #0fa, 0 0 43px #0fa, 0 0 51px #00ffd0, 0 0 60px #00ffd0$2"); // Изменяем text-shadow
+                keyframesStyle.cssText = keyframesText;
+            }
+        }
+    }
+
+    // Вызываем функцию для применения стиля text-shadow к @keyframes flicker при загрузке страницы
+    applyKeyframesTextShadow();
+
+    // Обработчик события при добавлении новой плитки на игровое поле
+    document.addEventListener('DOMNodeInserted', function(event) {
+        // Проверяем, что добавленный элемент - плитка
+        if (event.target.classList && event.target.classList.contains('cell')) {
+            // Вызываем функцию для применения стиля text-shadow к @keyframes flicker
+            applyKeyframesTextShadow();
+        }
+    });
+});
 
 	</script>
 
