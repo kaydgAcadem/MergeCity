@@ -89,34 +89,13 @@ document.addEventListener("DOMContentLoaded", function() {
             buttonRootId: 'ton-connect'
         });
 	
-		
 		async function connectToWallet() {
 			const connectedWallet = await tonConnectUI.connectWallet();
 			// Do something with connectedWallet if needed
 			console.log(connectedWallet);
+			connectToWallet().catch
 		}
-
-		// Call the function
-		connectToWallet().catch(error => {
-        console.error("Error connecting to wallet:", error);
-		});
-
-
-    /*    // Функция для подключения к кошельку
-        async function connectToWallet() {
-            const connectedWallet = await tonConnectUI.connectWallet();
-            // Do something with connectedWallet if needed
-            console.log(connectedWallet);
-        }
-
-        // Обработчик события нажатия на кнопку подключения кошелька
-        const connectButton = document.getElementById('ton-connect');
-        connectButton.addEventListener('click', function () {
-            connectToWallet().catch(error => {
-                console.error("Error connecting to wallet:", error);
-            });
-        });
-    });*/
+});
 </script>
 
 	
