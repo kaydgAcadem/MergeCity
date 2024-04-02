@@ -88,8 +88,21 @@ document.addEventListener("DOMContentLoaded", function() {
             manifestUrl: 'https://kaydgacadem.github.io/MergeMaster//tonconnect-manifest.json',
             buttonRootId: 'ton-connect'
         });
+	
+		
+		async function connectToWallet() {
+			const connectedWallet = await tonConnectUI.connectWallet();
+			// Do something with connectedWallet if needed
+			console.log(connectedWallet);
+		}
 
-        // Функция для подключения к кошельку
+		// Call the function
+		connectToWallet().catch(error => {
+        console.error("Error connecting to wallet:", error);
+		});
+
+
+    /*    // Функция для подключения к кошельку
         async function connectToWallet() {
             const connectedWallet = await tonConnectUI.connectWallet();
             // Do something with connectedWallet if needed
@@ -103,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.error("Error connecting to wallet:", error);
             });
         });
-    });
+    });*/
 </script>
 
 	
