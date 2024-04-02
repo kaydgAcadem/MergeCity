@@ -10,25 +10,25 @@
 	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
 	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 	
-	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			let usercard = document.getElementById("usercard"); //получаем блок usercard
-			let profName = document.createElement('p'); //создаем параграф
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		let usercard = document.getElementById("usercard"); //получаем блок usercard
+		let profName = document.createElement('p'); //создаем параграф
 
-			// Проверяем, что данные пользователя загружены
-			if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            profName.innerText = `${tg.initDataUnsafe.user.first_name} (${tg.initDataUnsafe.user.language_code})`;
-			} else {
-				profName.innerText = 'No Name';
-			}
+		// Проверяем, что данные пользователя загружены
+		if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+           profName.innerText = `${tg.initDataUnsafe.user.first_name} (${tg.initDataUnsafe.user.language_code})`;
+		} else {
+			profName.innerText = 'No Name';
+		}
         
-			//выдем username и код языка
+		//выдем username и код языка
 			usercard.appendChild(profName); //добавляем 
-		});
-	</script>
+	});
+</script>
 
 	
-	<script>
+<script>
 document.addEventListener("DOMContentLoaded", function() {
     // Получаем тип устройства пользователя
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (deviceType === "iOS") {
             var cells = document.querySelectorAll(".cell");
             var usercard = document.getElementById("usercard");
-
             cells.forEach(function(cell) {
                 cell.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)";
                 cell.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.6)";
@@ -55,170 +54,169 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Вызываем функцию для применения стиля text-shadow при загрузке страницы
-    applyTextShadow();    
+    applyTextShadow();
 
-    // Обработчик события при добавлении новой плитки на игровое поле
-    document.addEventListener('DOMNodeInserted', function(event) {
-        // Проверяем, что добавленный элемент - плитка
-        if (event.target.classList && event.target.classList.contains('cell')) {
-            // Вызываем функцию для применения стиля text-shadow к @keyframes flicker
-            applyTextShadow();
+    // Создаем MutationObserver
+    const observer = new MutationObserver(function(mutationsList, observer) {
+        for(let mutation of mutationsList) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                // Проверяем, что добавленный элемент - плитка
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.classList && node.classList.contains('cell')) {
+                        applyTextShadow();
+                    }
+                });
+            }
         }
     });
-});
 
-	</script>
+    // Начинаем отслеживать изменения в целевом узле
+    observer.observe(document.getElementById('game-container'), { childList: true });
+});
+</script>
+
 
 </head>
 <body>
-	
 	<div class="container">
 	<div id="usercard"></div>    
-	<div id="ton-connect"></div>
+		<div id="ton-connect"></div>
 	</div>
     <div id="score">Score: 0</div>
     <div id="game-container"></div>
     <div id="game-overlay">
         <button id="new-game-button">&#8634;</button>
     </div>
-
+<button id="new-game-button">&#8634;</button>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
             manifestUrl: 'https://kaydgacadem.github.io/MergeMaster//tonconnect-manifest.json',
             buttonRootId: 'ton-connect'
         });
-	
 		async function connectToWallet() {
 			const connectedWallet = await tonConnectUI.connectWallet();
 			// Do something with connectedWallet if needed
 			console.log(connectedWallet);
 			connectToWallet().catch
 		}
-});
+	});
 </script>
-
 	
-    <script>
-		let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
-		tg.expand();
+<script>
+	let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
+	tg.expand();
 		
-        // Определение размера игрового поля
-        const BOARD_SIZE = 4;
-        let score = 0; // Переменная для хранения счета
+    // Определение размера игрового поля
+    const BOARD_SIZE = 4;
+    let score = 0; // Переменная для хранения счета
 
-        // Создание новой игры
-        function newGame() {
-            let board = new Array(BOARD_SIZE).fill(0).map(() => new Array(BOARD_SIZE).fill(0));
-            addNewTile(board);
-            addNewTile(board);
-            return board;
-        }
-
-        // Добавление новой плитки на игровое поле
-        function addNewTile(board) {
-            let emptyCells = [];
-            for (let i = 0; i < BOARD_SIZE; i++) {
-                for (let j = 0; j < BOARD_SIZE; j++) {
-                    if (board[i][j] === 0) {
-                        emptyCells.push({ x: i, y: j });
-                    }
-                }
-            }
-            if (emptyCells.length > 0) {
-                let { x, y } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-                board[x][y] = Math.random() < 0.9 ? 2 : 4;
-            }
-        }
-
-        // Увеличение счета
-        function increaseScore(value) {
-            score += value;
-            document.getElementById('score').textContent = 'Score: ' + score;
-        }
-
-        // Проверка наличия доступных ходов
-        function checkMovesAvailable(board) {
-            for (let i = 0; i < BOARD_SIZE; i++) {
-                for (let j = 0; j < BOARD_SIZE; j++) {
-                    if (board[i][j] === 0) {
-                        return true; // Есть пустая ячейка
-                    }
-                    if ((i < BOARD_SIZE - 1 && board[i][j] === board[i + 1][j]) || // Есть возможные слияния по вертикали
-                        (j < BOARD_SIZE - 1 && board[i][j] === board[i][j + 1])) { // Есть возможные слияния по горизонтали
-                        return true;
-                    }
-                }
-            }
-            return false; // Ходы больше не возможны
-        }
-
-        // Выполнение хода
-        function move(board, direction) {
-            let newBoard = JSON.parse(JSON.stringify(board)); // Создание копии игрового поля
-            switch (direction) {
-                case 'up':
-                    return moveUp(newBoard);
-                case 'down':
-                    return moveDown(newBoard);
-                case 'left':
-                    return moveLeft(newBoard);
-                case 'right':
-                    return moveRight(newBoard);
-                default:
-                    return board;
-            }
-        }
-
-        // Перемещение чисел вверх и слияние одинаковых чисел
-        function moveUp(board) {
+    // Создание новой игры
+    function newGame() {
+        let board = new Array(BOARD_SIZE).fill(0).map(() => new Array(BOARD_SIZE).fill(0));
+        addNewTile(board);
+        addNewTile(board);
+        return board;
+    }
+    // Добавление новой плитки на игровое поле
+    function addNewTile(board) {
+        let emptyCells = [];
+        for (let i = 0; i < BOARD_SIZE; i++) {
             for (let j = 0; j < BOARD_SIZE; j++) {
-                for (let i = 1; i < BOARD_SIZE; i++) {
-                    if (board[i][j] !== 0) {
-                        let k = i;
-                        while (k > 0 && (board[k - 1][j] === 0 || board[k - 1][j] === board[k][j])) {
-                            if (board[k - 1][j] === board[k][j]) {
-                                board[k - 1][j] *= 2;
-                                increaseScore(board[k - 1][j]); // Увеличение счета при слиянии
-                                board[k][j] = 0;
-                                break;
-                            }
-                            if (board[k - 1][j] === 0) {
-                                board[k - 1][j] = board[k][j];
-                                board[k][j] = 0;
-                            }
-                            k--;
-                        }
-                    }
+                if (board[i][j] === 0) {
+                    emptyCells.push({ x: i, y: j });
                 }
             }
-            return board;
         }
-
-        // Перемещение чисел вниз и слияние одинаковых чисел
-        function moveDown(board) {
+        if (emptyCells.length > 0) {
+            let { x, y } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            board[x][y] = Math.random() < 0.9 ? 2 : 4;
+        }
+    }
+    // Увеличение счета
+    function increaseScore(value) {
+        score += value;
+        document.getElementById('score').textContent = 'Score: ' + score;
+    }
+    // Проверка наличия доступных ходов
+    function checkMovesAvailable(board) {
+        for (let i = 0; i < BOARD_SIZE; i++) {
             for (let j = 0; j < BOARD_SIZE; j++) {
-                for (let i = BOARD_SIZE - 2; i >= 0; i--) {
-                    if (board[i][j] !== 0) {
-                        let k = i;
-                        while (k < BOARD_SIZE - 1 && (board[k + 1][j] === 0 || board[k + 1][j] === board[k][j])) {
-                            if (board[k + 1][j] === board[k][j]) {
-                                board[k + 1][j] *= 2;
-                                increaseScore(board[k + 1][j]); // Увеличение счета при слиянии
-                                board[k][j] = 0;
-                                break;
-                            }
-                            if (board[k + 1][j] === 0) {
-                                board[k + 1][j] = board[k][j];
-                                board[k][j] = 0;
-                            }
-                            k++;
+                if (board[i][j] === 0) {
+                    return true; // Есть пустая ячейка
+                }
+                if ((i < BOARD_SIZE - 1 && board[i][j] === board[i + 1][j]) || // Есть возможные слияния по вертикали
+                    (j < BOARD_SIZE - 1 && board[i][j] === board[i][j + 1])) { // Есть возможные слияния по горизонтали
+                    return true;
+                }
+            }
+        }
+        return false; // Ходы больше не возможны
+    }
+    // Выполнение хода
+    function move(board, direction) {
+        let newBoard = JSON.parse(JSON.stringify(board)); // Создание копии игрового поля
+        switch (direction) {
+            case 'up':
+                return moveUp(newBoard);
+            case 'down':
+                return moveDown(newBoard);
+            case 'left':
+                return moveLeft(newBoard);
+            case 'right':
+                return moveRight(newBoard);
+            default:
+                return board;
+        }
+    }
+    // Перемещение чисел вверх и слияние одинаковых чисел
+    function moveUp(board) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            for (let i = 1; i < BOARD_SIZE; i++) {
+                if (board[i][j] !== 0) {
+                    let k = i;
+                    while (k > 0 && (board[k - 1][j] === 0 || board[k - 1][j] === board[k][j])) {
+                        if (board[k - 1][j] === board[k][j]) {
+                            board[k - 1][j] *= 2;
+                            increaseScore(board[k - 1][j]); // Увеличение счета при слиянии
+                            board[k][j] = 0;
+                            break;
                         }
+                        if (board[k - 1][j] === 0) {
+                            board[k - 1][j] = board[k][j];
+                            board[k][j] = 0;
+                        }
+                        k--;
                     }
                 }
             }
-            return board;
         }
+        return board;
+    }
+    // Перемещение чисел вниз и слияние одинаковых чисел
+    function moveDown(board) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            for (let i = BOARD_SIZE - 2; i >= 0; i--) {
+                if (board[i][j] !== 0) {
+                    let k = i;
+                    while (k < BOARD_SIZE - 1 && (board[k + 1][j] === 0 || board[k + 1][j] === board[k][j])) {
+                        if (board[k + 1][j] === board[k][j]) {
+                            board[k + 1][j] *= 2;
+                            increaseScore(board[k + 1][j]); // Увеличение счета при слиянии
+                            board[k][j] = 0;
+                            break;
+                        }
+                        if (board[k + 1][j] === 0) {
+                            board[k + 1][j] = board[k][j];
+                            board[k][j] = 0;
+                        }
+                        k++;
+                    }
+                }
+            }
+        }
+        return board;
+    }
 
         // Перемещение чисел влево и слияние одинаковых чисел
         function moveLeft(board) {
@@ -293,8 +291,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        // Функция для определения цвета плитки в зависимости от значения
-        // Обновленная функция getTileColor
 // Функция для определения цвета плитки в зависимости от значения
 function getTileColor(value) {
     switch (value) {
