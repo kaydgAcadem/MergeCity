@@ -88,13 +88,13 @@ body {
     color: #fff; /* Цвет текста кнопки */
     border: none;
     border-radius: 8px;
-    width: 375px;
-    height: 375px;
+    width: 350px;
+    height: 350px;
     font-size: 70px;
 	font-weight: bold;
     cursor: pointer;
     position: absolute;
-    top: 49%;
+    top: 53%;
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 25px #0fa; /* Тень для кнопки */
