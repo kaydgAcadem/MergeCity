@@ -2,406 +2,436 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Merge City</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+	<script defer src="scroll.js"></script>
+	<script defer src="style_iOS.js"></script>
+	<script defer src="save.js"></script>
+	<script defer src="wallet.js"></script>
+	<script defer src="userInfo.js"></script>
+	<script defer src="winners.js"></script>
+	<script defer src="orientation.js"></script>
+	<script defer src="sound.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-
-    <script>
-        function startNewGame() {
-            let board = newGame();
-            render(board);
-            return board;
-        }
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let usercard = document.getElementById("usercard");
-            let profName = document.createElement('p');
-
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                profName.innerText = `${tg.initDataUnsafe.user.first_name} (${tg.initDataUnsafe.user.language_code})`;
-            } else {
-                profName.innerText = 'No Name';
-            }
-
-            usercard.appendChild(profName);
-        });
-    </script>
+	
 </head>
+
 <body>
-<div class="top-container">
-    <div id="usercard"></div>
-    <div id="ton-connect"></div>
-</div>
-<div id="score">Score: 0</div>
-<div id="game-container"></div>
-<div id="game-overlay">
-    <button id="new-game-button">&#8634;</button>
-</div>
+	<audio id="background-music" src="sound/background.mp3" autoplay loop controls style="display: none;"></audio>
 
+	<div class="container" id="container" hidden>
+		<div class="top-container">
+			<div id="usercard"></div>
+			<div id="ton-connect"></div>
+		</div>
+		<div class="mid-container">
+			<button class=btn id="new-game-btn">&#8635;</button>
+			<button class=btn id="sound-btn">&#9835;</button>
+			<div class=score id="score-text">Score:</div>
+			<div class=score id="score">0</div>
+		</div>
+		
+		<div id="game-container"></div>
+		<div id="device-info"></div>
+		<div id="game-overlay">
+			<button class="end-game" id="end-game">Game Over</button>
+		</div>
+	</div>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-            manifestUrl: 'https://kaydgacadem.github.io/MergeCity/tonconnect-manifest.json',
-            buttonRootId: 'ton-connect'
-        });
+//Income parametres
+const BOARD_SIZE = 4;
+let score = 0;
+let tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+tg.enableClosingConfirmation();
+console.log(navigator.userAgent);
 
-        async function connectToWallet() {
-            try {
-                const connectedWallet = await tonConnectUI.connectWallet();
-                if (connectedWallet && connectedWallet.account && connectedWallet.account.address) {
-                    const address = connectedWallet.account.address;
-                    console.log("Адрес вашего кошелька:", address);
-                    return connectedWallet;
-                } else {
-                    console.error('Ошибка: Неверный формат объекта connectedWallet или отсутствует адрес');
-                }
-            } catch (error) {
-                console.error('Ошибка подключения к кошельку:', error);
-            }
-        }
+//New Game
+function newGame() {
+    let board = new Array(BOARD_SIZE).fill(0).map(() => new Array(BOARD_SIZE).fill(0));
+    addNewTile(board);
+    addNewTile(board);
+    return board;
+}
 
-        connectToWallet().then(connectedWallet => {
-            window.connectedWallet = connectedWallet;
-        });
-    });
-</script>
-
-<script>
-    let tg = window.Telegram.WebApp;
-    tg.expand(ignore_collapsing=true);
-    tg.onEvent('viewportChanged', () => {
-        if (!tg.isExpanded) {
-            tg.expand();
-        }
-    })
-    tg.enableClosingConfirmation();
-
-    const BOARD_SIZE = 4;
-    let score = 0;
-
-    function newGame() {
-        let board = new Array(BOARD_SIZE).fill(0).map(() => new Array(BOARD_SIZE).fill(0));
-        addNewTile(board);
-        addNewTile(board);
-        return board;
-    }
-
-    function addNewTile(board) {
-        let emptyCells = [];
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            for (let j = 0; j < BOARD_SIZE; j++) {
-                if (board[i][j] === 0) {
-                    emptyCells.push({x: i, y: j});
-                }
-            }
-        }
-        if (emptyCells.length > 0) {
-            let {x, y} = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            board[x][y] = Math.random() < 0.9 ? 2 : 4;
-        }
-    }
-
-    function increaseScore(value) {
-        score += value;
-        document.getElementById('score').textContent = 'Score: ' + score;
-    }
-
-    function checkMovesAvailable(board) {
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            for (let j = 0; j < BOARD_SIZE; j++) {
-                if (board[i][j] === 0) {
-                    return true;
-                }
-                if ((i < BOARD_SIZE - 1 && board[i][j] === board[i + 1][j]) ||
-                    (j < BOARD_SIZE - 1 && board[i][j] === board[i][j + 1])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    function move(board, direction) {
-        let newBoard = JSON.parse(JSON.stringify(board));
-        switch (direction) {
-            case 'up':
-                return moveUp(newBoard);
-            case 'down':
-                return moveDown(newBoard);
-            case 'left':
-                return moveLeft(newBoard);
-            case 'right':
-                return moveRight(newBoard);
-            default:
-                return board;
-        }
-    }
-
-    function moveUp(board) {
+//New tile on board
+function addNewTile(board) {
+    let emptyCells = [];
+    for (let i = 0; i < BOARD_SIZE; i++) {
         for (let j = 0; j < BOARD_SIZE; j++) {
-            for (let i = 1; i < BOARD_SIZE; i++) {
-                if (board[i][j] !== 0) {
-                    let k = i;
-                    while (k > 0 && (board[k - 1][j] === 0 || board[k - 1][j] === board[k][j])) {
-                        if (board[k - 1][j] === board[k][j]) {
-                            board[k - 1][j] *= 2;
-                            increaseScore(board[k - 1][j]);
-                            if (board[k - 1][j] === 64) {
-                                createNewWinnerEntry(window.connectedWallet.account.address, score);
-                            }
-                            board[k][j] = 0;
-                            break;
-                        }
-                        if (board[k - 1][j] === 0) {
-                            board[k - 1][j] = board[k][j];
-                            board[k][j] = 0;
-                        }
-                        k--;
-                    }
-                }
+            if (board[i][j] === 0) {
+                emptyCells.push({
+                    x: i,
+                    y: j
+                });
             }
         }
-        return board;
     }
+    if (emptyCells.length > 0) {
+        let {
+            x,
+            y
+        } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        board[x][y] = Math.random() < 0.9 ? 2 : 4;
 
-    function moveDown(board) {
-        for (let j = 0; j < BOARD_SIZE; j++) {
-            for (let i = BOARD_SIZE - 2; i >= 0; i--) {
-                if (board[i][j] !== 0) {
-                    let k = i;
-                    while (k < BOARD_SIZE - 1 && (board[k + 1][j] === 0 || board[k + 1][j] === board[k][j])) {
-                        if (board[k + 1][j] === board[k][j]) {
-                            board[k + 1][j] *= 2;
-                            increaseScore(board[k + 1][j]);
-                            if (board[k + 1][j] === 64) {
-                                createNewWinnerEntry(window.connectedWallet.account.address, score);
-                            }
-                            board[k][j] = 0;
-                            break;
-                        }
-                        if (board[k + 1][j] === 0) {
-                            board[k + 1][j] = board[k][j];
-                            board[k][j] = 0;
-                        }
-                        k++;
-                    }
-                }
-            }
-        }
-        return board;
-    }
-
-    function moveLeft(board) {
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            for (let j = 1; j < BOARD_SIZE; j++) {
-                if (board[i][j] !== 0) {
-                    let k = j;
-                    while (k > 0 && (board[i][k - 1] === 0 || board[i][k - 1] === board[i][k])) {
-                        if (board[i][k - 1] === board[i][k]) {
-                            board[i][k - 1] *= 2;
-                            increaseScore(board[i][k - 1]);
-                            if (board[i][k - 1] === 64) {
-                                createNewWinnerEntry(window.connectedWallet.account.address, score);
-                            }
-                            board[i][k] = 0;
-                            break;
-                        }
-                        if (board[i][k - 1] === 0) {
-                            board[i][k - 1] = board[i][k];
-                            board[i][k] = 0;
-                        }
-                        k--;
-                    }
-                }
-            }
-        }
-        return board;
-    }
-
-    function moveRight(board) {
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            for (let j = BOARD_SIZE - 2; j >= 0; j--) {
-                if (board[i][j] !== 0) {
-                    let k = j;
-                    while (k < BOARD_SIZE - 1 && (board[i][k + 1] === 0 || board[i][k + 1] === board[i][k])) {
-                        if (board[i][k + 1] === board[i][k]) {
-                            board[i][k + 1] *= 2;
-                            increaseScore(board[i][k + 1]);
-                            if (board[i][k + 1] === 64) {
-                                createNewWinnerEntry(window.connectedWallet.account.address, score);
-                            }
-                            board[i][k] = 0;
-                            break;
-                        }
-                        if (board[i][k + 1] === 0) {
-                            board[i][k + 1] = board[i][k];
-                            board[i][k] = 0;
-                        }
-                        k++;
-                    }
-                }
-            }
-        }
-        return board;
-    }
-
-    function render(board) {
-        let gameContainer = document.getElementById('game-container');
-        gameContainer.innerHTML = '';
-
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            for (let j = 0; j < BOARD_SIZE; j++) {
-                let cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.textContent = board[i][j] === 0 ? '' : board[i][j];
-                cell.style.backgroundColor = getTileColor(board[i][j]);
-                gameContainer.appendChild(cell);
-            }
-        }
-
-        if (!checkMovesAvailable(board)) {
-            document.getElementById('game-overlay').classList.add('active');
-        } else {
-            document.getElementById('game-overlay').classList.remove('active');
+        // Добавляем класс 'new' для анимации появления
+        let cellId = `cell-${x}-${y}`;
+        let cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.add('new');
+            setTimeout(() => {
+                cell.classList.remove('new');
+            }, 300); // Устанавливаем таймаут 300 мс (длительность анимации)
         }
     }
-
-    function getTileColor(value) {
-        switch (value) {
-            case 2:
-                return '#A3AAFF';
-            case 4:
-                return '#B696F4';
-            case 8:
-                return '#CA81E8';
-            case 16:
-                return '#DD6DDD';
-            case 32:
-                return '#E67D9A';
-            case 64:
-                return '#EA8579';
-            case 128:
-                return '#D26A7D';
-            case 256:
-                return '#BA4E80';
-            case 512:
-                return '#A23384';
-            case 1024:
-                return '#862E9C';
-            case 2048:
-                return '#6B2AB5';
-            default:
-                return 'tile-default';
-        }
-    }
-
-    function createNewWinnerEntry(address, score) {
-    const data = {
-        connectedWallet: {
-            account: {
-                address: address
-            }
-        },
-        score: score
-    };
-
-    console.log(JSON.stringify(data)); // Проверяем формат данных перед отправкой
-
-    fetch('https://mcity.kaydg.keenetic.pro/saveWinner', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Server response:', data);
-    })
-    .catch(error => {
-        console.error('Error sending data to server:', error);
-    });
 }
 
 
-    document.addEventListener('keydown', function (event) {
-        let direction;
-        switch (event.key) {
-            case 'ArrowUp':
-                direction = 'up';
-                break;
-            case 'ArrowDown':
-                direction = 'down';
-                break;
-            case 'ArrowLeft':
-                direction = 'left';
-                break;
-            case 'ArrowRight':
-                direction = 'right';
-                break;
-            default:
-                return;
-        }
-        board = move(board, direction);
-        addNewTile(board);
-        render(board);
-    });
+//Score
+function increaseScore(value) {
+    score += value;
+    document.getElementById('score').textContent = score;
+    // Сохранить состояние после изменения счета
+    saveGameData();
+}
 
-    let startX, startY;
-
-    document.getElementById('game-container').addEventListener('touchstart', function (event) {
-        startX = event.touches[0].clientX;
-        startY = event.touches[0].clientY;
-    });
-
-    document.getElementById('game-container').addEventListener('touchmove', function (event) {
-        event.preventDefault();
-    });
-
-    document.getElementById('game-container').addEventListener('touchend', function (event) {
-        let endX = event.changedTouches[0].clientX;
-        let endY = event.changedTouches[0].clientY;
-
-        let deltaX = endX - startX;
-        let deltaY = endY - startY;
-
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (deltaX > 0) {
-                board = move(board, 'right');
-            } else {
-                board = move(board, 'left');
+//Available moves
+function checkMovesAvailable(board) {
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            if (board[i][j] === 0) {
+                return true;
             }
-        } else {
-            if (deltaY > 0) {
-                board = move(board, 'down');
-            } else {
-                board = move(board, 'up');
+            if ((i < BOARD_SIZE - 1 && board[i][j] === board[i + 1][j]) ||
+                (j < BOARD_SIZE - 1 && board[i][j] === board[i][j + 1])) {
+                return true;
             }
         }
+    }
+    return false;
+}
 
-        addNewTile(board);
-        render(board);
-    });
+//Tile moves
+function canMoveInDirection(board, direction) {
+    let testBoard = JSON.parse(JSON.stringify(board));
+    let di = 0,
+        dj = 0;
+    switch (direction) {
+        case 'up':
+            di = -1;
+            break;
+        case 'down':
+            di = 1;
+            break;
+        case 'left':
+            dj = -1;
+            break;
+        case 'right':
+            dj = 1;
+            break;
+    }
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            if (testBoard[i][j] !== 0) {
+                let targetI = i + di;
+                let targetJ = j + dj;
+                while (targetI >= 0 && targetI < BOARD_SIZE && targetJ >= 0 && targetJ < BOARD_SIZE) {
+                    if (testBoard[targetI][targetJ] === 0 || testBoard[targetI][targetJ] === testBoard[i][j]) {
+                        return true;
+                    }
+                    targetI += di;
+                    targetJ += dj;
+                }
+            }
+        }
+    }
+    return false;
+}
 
-    let board = newGame();
-    render(board);
+function move(board, direction) {
+    if (!canMoveInDirection(board, direction)) {
+        return board; // Не выполняем сдвиг, если невозможен
+    }
+    let newBoard = JSON.parse(JSON.stringify(board));
+    let merged = Array.from({
+        length: BOARD_SIZE
+    }, () => Array(BOARD_SIZE).fill(false));
 
-    document.getElementById('new-game-button').addEventListener('click', function () {
-        score = 0;
-        document.getElementById('score').textContent = 'Score: ' + score;
-        board = newGame();
-        render(board);
-    });
+function moveSingleTile(i, j, di, dj) {
+    let targetI = i + di;
+    let targetJ = j + dj;
+
+    while (
+        targetI >= 0 &&
+        targetI < BOARD_SIZE &&
+        targetJ >= 0 &&
+        targetJ < BOARD_SIZE &&
+        (newBoard[targetI][targetJ] === 0 ||
+            (newBoard[targetI][targetJ] === newBoard[i][j] && !merged[targetI][targetJ]))
+    ) {
+        if (newBoard[targetI][targetJ] === newBoard[i][j] && !merged[targetI][targetJ]) {
+            newBoard[targetI][targetJ] *= 2;
+            increaseScore(newBoard[targetI][targetJ]);
+
+            if (newBoard[targetI][targetJ] === 16 && window.connectedWallet && window.connectedWallet.account) {
+                console.log("Triggering createNewWinnerEntry with address:", window.connectedWallet.account.address, "and score:", score);
+                createNewWinnerEntry(window.connectedWallet.account.address, score);
+            }
+
+            newBoard[i][j] = 0;
+            merged[targetI][targetJ] = true;
+
+            // Добавляем класс increase для анимации увеличения размера
+            let cellId = `cell-${targetI}-${targetJ}`;
+            let cell = document.getElementById(cellId);
+            if (cell) {
+                cell.style.transform = 'scale(1.2)'; // Устанавливаем масштаб на 1.5
+                setTimeout(() => {
+                    cell.style.transform = 'scale(1)'; // Возвращаем масштаб на 1 через 300 миллисекунд
+                }, 300);
+                // Добавляем класс shine для анимации отблеска
+                cell.classList.add('merged');
+                setTimeout(() => {
+                    cell.classList.remove('merged');
+                }, 500); // Устанавливаем таймаут 500 мс (длительность анимации) для удаления класса
+            }
+            break;
+        }
+
+        if (newBoard[targetI][targetJ] === 0) {
+            newBoard[targetI][targetJ] = newBoard[i][j];
+            newBoard[i][j] = 0;
+
+            // Добавляем класс движения для плитки
+            let cellId = `cell-${targetI}-${targetJ}`;
+            let cell = document.getElementById(cellId);
+            if (cell) {
+                let directionClass;
+                if (di === -1) directionClass = 'move-up';
+                if (di === 1) directionClass = 'move-down';
+                if (dj === -1) directionClass = 'move-left';
+                if (dj === 1) directionClass = 'move-right';
+
+                if (directionClass) {
+                    cell.classList.add(directionClass);
+                    setTimeout(() => {
+                        cell.classList.remove(directionClass);
+                    }, 300); // Удаляем класс после завершения анимации
+                }
+            }
+        }
+
+        i = targetI;
+        j = targetJ;
+        targetI += di;
+        targetJ += dj;
+    }
+}
+
+
+
+
+
+
+    let di = 0,
+        dj = 0;
+    let loopOrder = [];
+
+    switch (direction) {
+        case 'up':
+            di = -1;
+            loopOrder = [
+                [1, BOARD_SIZE],
+                [0, BOARD_SIZE]
+            ];
+            break;
+        case 'down':
+            di = 1;
+            loopOrder = [
+                [BOARD_SIZE - 2, -1],
+                [0, BOARD_SIZE]
+            ];
+            break;
+        case 'left':
+            dj = -1;
+            loopOrder = [
+                [0, BOARD_SIZE],
+                [1, BOARD_SIZE]
+            ];
+            break;
+        case 'right':
+            dj = 1;
+            loopOrder = [
+                [0, BOARD_SIZE],
+                [BOARD_SIZE - 2, -1]
+            ];
+            break;
+    }
+
+    const [rowRange, colRange] = loopOrder;
+
+    for (let i = rowRange[0]; i !== rowRange[1]; i += (rowRange[1] - rowRange[0]) / Math.abs(rowRange[1] - rowRange[0])) {
+        for (let j = colRange[0]; j !== colRange[1]; j += (colRange[1] - colRange[0]) / Math.abs(colRange[1] - colRange[0])) {
+            if (newBoard[i][j] !== 0) {
+                moveSingleTile(i, j, di, dj);
+            }
+        }
+    }
+    saveGameData();
+    return newBoard;
+
+}
+
+
+
+
+
+function updateTile(i, j, value) {
+    let cellId = `cell-${i}-${j}`;
+    let cell = document.getElementById(cellId);
+    if (!cell) {
+        cell = document.createElement('div');
+        cell.id = cellId;
+        cell.className = 'cell';
+        document.getElementById('game-container').appendChild(cell);
+    }
+    cell.textContent = value === 0 ? '' : value;
+    cell.style.backgroundColor = value === 0 ? getTileColor(0) : getTileColor(value);
+}
+
+
+
+//Render board
+function render(board, prevBoard = null) {
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            if (!prevBoard || prevBoard[i][j] !== board[i][j]) {
+                updateTile(i, j, board[i][j]);
+            }
+        }
+    }
+
+    if (!checkMovesAvailable(board)) {
+        document.getElementById('game-overlay').classList.add('active');
+    } else {
+        document.getElementById('game-overlay').classList.remove('active');
+    }
+}
+
+
+
+//Tile colors
+function getTileColor(value) {
+    switch (value) {
+        case 2:
+            return '#A3AAFF';
+        case 4:
+            return '#B696F4';
+        case 8:
+            return '#CA81E8';
+        case 16:
+            return '#DD6DDD';
+        case 32:
+            return '#E67D9A';
+        case 64:
+            return '#EA8579';
+        case 128:
+            return '#D26A7D';
+        case 256:
+            return '#BA4E80';
+        case 512:
+            return '#A23384';
+        case 1024:
+            return '#862E9C';
+        case 2048:
+            return '#6B2AB5';
+        default:
+            return 'rgba(0, 0, 0, 0.2)';
+    }
+}
+
+// Arrow keys moves
+document.addEventListener('keydown', function(event) {
+    let direction;
+    switch (event.key) {
+        case 'ArrowUp':
+            direction = 'up';
+            break;
+        case 'ArrowDown':
+            direction = 'down';
+            break;
+        case 'ArrowLeft':
+            direction = 'left';
+            break;
+        case 'ArrowRight':
+            direction = 'right';
+            break;
+        default:
+            return;
+    }
+    let prevBoard = JSON.parse(JSON.stringify(board));
+    let newBoard = move(board, direction);
+    if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
+        addNewTile(newBoard); // Добавляем новую плитку только если ход был успешным
+    }
+    board = newBoard;
+    render(board, prevBoard);
+});
+
+
+//Touch screen moves
+	let startX, startY;
+	document.getElementById('game-container').addEventListener('touchstart', function(event) {
+	    startX = event.touches[0].clientX;
+	    startY = event.touches[0].clientY;
+	});
+	document.getElementById('game-container').addEventListener('touchmove', function(event) {
+	    event.preventDefault();
+	});
+document.getElementById('game-container').addEventListener('touchend', function(event) {
+    let endX = event.changedTouches[0].clientX;
+    let endY = event.changedTouches[0].clientY;
+    let deltaX = endX - startX;
+    let deltaY = endY - startY;
+    let direction;
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        direction = deltaX > 0 ? 'right' : 'left';
+    } else {
+        direction = deltaY > 0 ? 'down' : 'up';
+    }
+    let prevBoard = JSON.parse(JSON.stringify(board));
+    let newBoard = move(board, direction);
+    if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
+        addNewTile(newBoard); // Добавляем новую плитку только если ход был успешным
+    }
+    board = newBoard;
+    render(board, prevBoard);
+    saveGameData();
+});
+
+
+
+
+	//Load game-users-data
+	document.addEventListener('DOMContentLoaded', function() {
+	    loadGameData();
+	});
+	let board = newGame();
+	render(board);
+
+	//New game on button click
+	document.getElementById('new-game-btn').addEventListener('click', function() {
+	    score = 0;
+	    document.getElementById('score').textContent = score;
+	    board = newGame();
+	    render(board);
+	});
+
 </script>
 
 </body>
+
 </html>

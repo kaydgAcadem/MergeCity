@@ -4,34 +4,67 @@
 }
 
 body {
-    font-family: 'Spacetron', Arial, sans-serif;
-    background: linear-gradient(black, 70%, grey); /* Цвет фона в стиле synthwave */
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Запрет прокрутки */
-    display: flex;
+	height: 1000px;
+	overflow: hidden;
+	font-family: 'Spacetron', Arial, sans-serif;
+    background-color: linear-gradient(black, 70%, grey); /* Цвет фона в стиле synthwave */
+    margin: 0;	
+	display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-image: url('images/background1920x1080.jpg');
-    background-size: cover; /* Убедимся, что фон занимает всю область */
+    background-image: url('images/background1366x768.jpg');
+	background-repeat: no-repeat;
+    background-size: 1025px 1025px; /* Убедимся, что фон занимает всю область */
     background-position: center; /* Центрируем фон */
     flex-direction: column; /* Добавлено для вертикального выравнивания элементов */
 }
 
-/* Score */
-#score 	{
-	font-family: 'Spacetron', Arial, sans-serif;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
-	animation: flicker 2s infinite alternate;
-	color: #fff;
+@keyframes scaleOut {
+    0% {
+        transform: scale(0);  /* Начинаем с нулевого размера */
+        opacity: 0;           /* Начинаем с прозрачности */
+    }
+    100% {
+        transform: scale(1);  /* Возвращаемся к нормальному размеру */
+        opacity: 1;           /* Возвращаемся к нормальной непрозрачности */
+    }
 }
-/* Flickering animation of Score */
-	@keyframes flicker {
-	0%, 18%, 22%, 25%, 53%, 57%, 100% {
 
+@keyframes slideFromTop {
+    0% {
+        transform: translateY(-100%); /* Начинаем за пределами экрана вверху */
+        opacity: 0; /* Начинаем с полной прозрачности */
+    }
+    100% {
+        transform: translateY(0); /* Перемещаем на нормальную позицию на экране */
+        opacity: 1; /* Делаем элемент полностью видимым */
+    }
+}
+
+@keyframes slideFromLeft {
+    0% {
+        transform: translateZ(-1000px) translateX(-100%); /* Начальная точка за экраном слева */
+        opacity: 0; /* Начинаем с полной прозрачности */
+    }
+    100% {
+        transform: translateZ(0) translateX(0); /* Перемещаем на нормальную позицию на экране */
+        opacity: 1; /* Делаем элемент полностью видимым */
+    }
+}
+
+@keyframes slideFromRight {
+    0% {
+        transform: translateZ(+1000px) translateX(+100%); /* Начальная точка за экраном слева */
+        opacity: 0; /* Начинаем с полной прозрачности */
+    }
+    100% {
+        transform: translateZ(0) translateX(0); /* Перемещаем на нормальную позицию на экране */
+        opacity: 1; /* Делаем элемент полностью видимым */
+    }
+}
+
+@keyframes neonBlink {
+	0%, 18%, 22%, 25%, 53%, 57%, 100% {
       text-shadow:
       0 0 16px #fff,
       0 0 21px #0fa,
@@ -41,71 +74,119 @@ body {
       0 0 50px #00ffd0,
       0 0 59px #00ffd0,
 	  0 0 69px #00ffd0;
-  
-	}
-  	20%, 24%, 55% {        
-		text-shadow: none;
+ 	}
+	  20%, 24%, 55% {        
+	  text-shadow: none;
+	}    
+}
+@keyframes neonBlinkIOS {
+	0%, 18%, 22%, 25%, 53%, 57%, 100% {
+      text-shadow:
+      0 0 5px #fff,
+      0 0 7px #0fa,
+      0 0 9px #0fa,
+      0 0 11px #0fa,
+	  0 0 14px #0fa,
+      0 0 17px #00ffd0,
+      0 0 20px #00ffd0,
+	  0 0 24px #00ffd0;
+ 	}
+	  20%, 24%, 55% {        
+	  text-shadow: none;
 	}    
 }
 
-/* Game Space */
-#game-container {
-    background-color: rgba(248, 249, 250, 0.4); /* Полупрозрачный фон */
-    border-radius: 8px;
-    box-shadow: 0 0 25px rgba(0, 255, 170, 0.5); /* Тень для контейнера */
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(4, 70px);
-    grid-template-rows: repeat(4, 70px);
-    gap: 10px;
-    position: relative; /* Добавлено для позиционирования кнопки */
+/* @keyframes increaseSize {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+} */
+
+@keyframes flareAnimation {
+    0% {
+        left: -150%; /* Положение в начале анимации */
+    }
+    100% {
+        left: 150%; /* Положение в конце анимации */
+    }
 }
 
-/* New Tile */
-.cell {
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 22px;
-    font-weight: bold;
-    color: #fdfdfd;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 1); /* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
-    box-shadow: 0 0 30px rgba(255, 255, 255, 1); /* Тень для клеток */
+
+@keyframes moveUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 
-#game-overlay {
-    display: none;
+@keyframes moveDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 
-#game-overlay.active {
-    display: flex; /* Показываем затемнение */
+@keyframes moveLeft {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
 }
 
-/* New Game btn */
-#new-game-button {
-    background-color: rgba(173, 173, 173, 0.8); /* Цвет кнопки */
-    color: #fff; /* Цвет текста кнопки */
-    border: none;
-    border-radius: 8px;
-    width: 350px;
-    height: 350px;
-    font-size: 70px;
-	font-weight: bold;
-    cursor: pointer;
-    position: absolute;
-    top: 53%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 25px #0fa; /* Тень для кнопки */
-    text-shadow: 0 0 25px #0fa; /* Тень для текста кнопки */
+@keyframes moveRight {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
 }
 
-#usercard	{
-	font-family: 'Spacetron', Arial, sans-serif;
-    font-size: 20px;
-	margin-top: -10px;
-    margin-left: 10px;
+.cell.move-up {
+    animation: moveUp 0.1s ease-out forwards;
+}
+
+.cell.move-down {
+    animation: moveDown 0.1s ease-out forwards;
+}
+
+.cell.move-left {
+    animation: moveLeft 0.1s ease-out forwards;
+}
+
+.cell.move-right {
+    animation: moveRight 0.1s ease-out forwards;
+}
+
+
+
+
+
+/* ---------- GLOBAL DIV ---------- */
+.container {
+	margin-top: 110px;
+}
+
+#container {
+
+}
+/* ---------- TOP DIV ---------- */
+.top-container {
+	display: flex;
+    justify-content: space-between;
+	animation: slideFromTop 1.5s ease forwards;
+}
+
+#usercard {
+    font-size: 14px;
+	margin-top: 5px;
+    margin-left: 5px;
 	color: #fff;
 	font-weight: bold;
 	text-shadow:
@@ -117,14 +198,151 @@ body {
 	  0 0 64px #00ffd0;
 }
 
-/* Connect Wallet */
-#ton-connect 	{
-	margin-left: 50px;
+#ton-connect {
+	margin-top: 7px;
+	margin-right: 5px;
+}
+/* ---------- MIDDLE DIV ---------- */
+.mid-container {
+	margin-top: 10px;
+	display: flex;
+    position: relative;
 }
 
-.container {
-	margin-top: -75px;
-	margin-bottom: 15px;
+.btn {
+    background-color: rgba(173, 173, 173, 0.7); /* Цвет кнопки */
+    color: #fff; /* Цвет текста кнопки */
+	text-align: center;
+    border: 3px solid white;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+	font-weight: bold;
+    cursor: pointer;
+    transform: none;
+	margin-top: 10px;
+}
+
+#new-game-btn {
+    margin-left: 10px;
+	animation: slideFromLeft 1.5s ease forwards;
+}
+
+#sound-btn {
+    margin-left: 250px;
+	animation: slideFromRight 1.5s ease forwards;
+}
+
+.score {
+	font-size: 22px;
+    font-weight: bold;
+	margin-top: 5px;
+    position: absolute;
+	top: 50%; /* Центрирование по вертикали */
+    left: 32%; /* Центрирование по горизонтали */
+	transform: translate(-50%, -50%); /* Сдвиг для точного центрирования */
+	animation: neonBlink 2s infinite alternate;
+	color: #fff;
+}
+
+#score-text {
+	margin-left: 10px;
+}
+
+#score {
+	margin-left: 120px;
+	position: flex;
+}
+/* ---------- GAME SPACE DIV ---------- */
+#game-container {
+    background-color: rgba(248, 249, 250, 0.4); /* Полупрозрачный фон */
+    border-radius: 8px;
+    box-shadow: 0 0 25px rgba(0, 255, 170, 0.5); /* Тень для контейнера */
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 70px);
+    grid-template-rows: repeat(4, 70px);
+    gap: 10px;
+    position: relative; /* Добавлено для позиционирования кнопки */
+	margin-top: 30px;
+	animation: scaleOut 1s ease forwards;
+}
+
+.cell {
+    border-radius: 8px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fdfdfd;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 1); /* 0 0 3px #03edf975, 0 0 5px #03edf975, 0 0 8px #03edf975; /* Добавим текстовую тень */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 1); /* Тень для клеток */
+	transition: transform 1s ease-in-out;
+	position: relative; /* Это важно добавить */
+    overflow-x: hidden; /* Это важно добавить */
+}
+
+.cell.new {
+    animation: scaleOut 0.3s ease-out;
+}
+
+.cell.increase {
+    transition: transform 0.3s ease-in-out;
+}
+
+.cell.merged::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 45px; /* Ширина свечения */
+    transform: skewX(-45deg); /* Наклон */
+    animation: flareAnimation 0.5s infinite linear; /* Время и тип анимации можно менять */
+    left: -150%; /* Начальное положение вне видимой области */
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4)); /* Градиент для свечения */
+}
+
+#game-overlay {
+    display: none;
+}
+
+#game-overlay.active {
+    display: flex; /* Показываем затемнение */
+}
+
+.end-game {
+	
+}
+
+#end-game {
+	font-family: 'Spacetron', Arial, sans-serif;
+	background-color: rgba(173, 173, 173, 0.7);
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	width: 350px;
+	height: 350px;
+	font-size: 30px;
+	font-weight: bold;
+	position: absolute;
+	margin-top: 68px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	animation: neonBlink 3s ease-in-out forwards;
+}
+
+#device-info {
+    font-size: 14px;
+	margin-top: 5px;
+    margin-left: 5px;
+	color: #fff;
+	font-weight: bold;
+
+}
+/* ---------- ADS DIV ---------- */
+.ads {
+	margin-top: 500px;
 }
