@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 let isConnected = false; // Флаг, указывающий на состояние подключения
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-	manifestUrl: 'https://kaydgacadem.github.io/MergeCity/tonconnect-manifest.json',
+	manifestUrl: 'https://mcity.kaydg.keenetic.pro/public/mcity/tonconnect-manifest.json',
 	buttonRootId: 'ton-connect'
 });
 
